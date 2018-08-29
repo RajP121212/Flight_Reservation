@@ -10,7 +10,11 @@ import com.suraj.flightReservation.dataTransferObject.UpdateReservationRequest;
 import com.suraj.flightReservation.entities.Reservation;
 import com.suraj.flightReservation.repository.ReservationRepository;
 
+import io.swagger.annotations.Api;
+
 @RestController
+@RequestMapping("/rest")
+@Api(value="Flight Reservation", description="Reservation REST end points. Find Reservation and Update Reservation")
 public class ReservationRESTController {
 	
 	@Autowired

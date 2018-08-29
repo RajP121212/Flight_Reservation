@@ -10,6 +10,8 @@ import com.suraj.flightReservation.entities.Reservation;
 import com.suraj.flightReservation.repository.FlightRepository;
 import com.suraj.flightReservation.repository.PassengerRepository;
 import com.suraj.flightReservation.repository.ReservationRepository;
+import com.suraj.flightReservation.util.EmailUtil;
+import com.suraj.flightReservation.util.PDFGenerator;
 
 @Service
 public class ReservationServiceImpl implements IReservationService {
@@ -22,6 +24,12 @@ public class ReservationServiceImpl implements IReservationService {
 	
 	@Autowired
 	private ReservationRepository reservationRepository;
+	
+	@Autowired
+	private PDFGenerator pdfGenerator;
+	
+	@Autowired
+	private EmailUtil emailUtil;
 
 	@Override
 	public Reservation bookFlight(ReservationRequest reservationRequest) {
@@ -60,6 +68,12 @@ public class ReservationServiceImpl implements IReservationService {
 		
 		//Now we need the ReservationRepository to save the reservation
 		Reservation savedReservation = reservationRepository.save(reservation);
+		
+		//Send the Email
+		String filePath = "C:\\Users\\PIL3985\\Documents\\Reservations\\Reservation" + savedReservation.getId() + ".pdf";
+		pdfGenerator.generateItinerary(savedReservation, filePath);
+		
+		emailUtil.sendItinerary(passenger.getUserName(), filePath);
 		
 		return savedReservation;
 	}
